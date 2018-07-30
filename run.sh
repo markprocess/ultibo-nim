@@ -8,6 +8,7 @@ set -e
 set -x
 sudo cp ultibo-nim-ultibonimprogram-kernel-RPI3.img /boot
 sudo cp *-config.txt *-cmdline.txt /boot
+sudo cp /boot/config.txt /boot/default-config.txt
 sudo cp /boot/ultibo-nim-ultibonimprogram-config.txt /boot/config.txt
 
 sleep 2
