@@ -3,7 +3,7 @@
 
 Blinks the raspberry pi's activity led.
 
-There is a running device at [ultibo-nim.iot.ngrok.io](http://ultibo-nim.ngrok.io)
+There is a running device at [ultibo-nim.iot.ngrok.io](http://ultibo-nim.iot.ngrok.io)
 
 Requirements
 
