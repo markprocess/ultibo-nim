@@ -5,7 +5,9 @@ uses
 {$ifdef BUILD_RPI } BCM2708,BCM2835, {$endif}
 {$ifdef BUILD_RPI2} BCM2709,BCM2836, {$endif}
 {$ifdef BUILD_RPI3} BCM2710,BCM2837, {$endif}
-GlobalConfig,GlobalConst,GlobalTypes,Platform,Threads,SysUtils,Classes,Console,Logging,Ultibo,FileSystem,MMC,FATFS;
+GlobalConfig,GlobalConst,GlobalTypes,Platform,Threads,SysUtils,Classes,Console,Logging,Ultibo,
+FileSystem,MMC,FATFS,
+DWCOTG,WebStatus,SMSC95XX,LAN78XX,HTTP;
 
 type 
  PRingBufferOfInt = ^TRingBufferOfInt;
@@ -15,6 +17,36 @@ type
   ReadCounter:Integer;
   WriteCounter:Integer;
  end;
+
+ TUltiboNimWebStatus = class(TWebStatusCustom)
+  function DoContent(AHost:THTTPHost;ARequest:THTTPServerRequest;AResponse:THTTPServerResponse):Boolean;override;
+ end;
+
+var 
+ ClockBuffer,LedBuffer:TRingBufferOfInt;
+ BlinkLoopHandle:TThreadHandle = INVALID_HANDLE_VALUE;
+ CurrentMilliseconds,PrevMilliseconds:Integer;
+ LedRequest:Integer;
+ HTTPListener:THTTPListener;
+ HTTPRedirect:THTTPRedirect;
+ UltiboNimWebStatus:TUltiboNimWebStatus;
+
+function TimeToString(Time:TDateTime):String;
+begin
+ Result:=IntToStr(Trunc(Time)) + ' days ' + TimeToStr(Time);
+end;
+
+function TUltiboNimWebStatus.DoContent(AHost:THTTPHost;ARequest:THTTPServerRequest;AResponse:THTTPServerResponse):Boolean;
+var 
+ WorkTime:TDateTime;
+begin
+ AddContent(AResponse,'<div><big><big><b>Ultibo and Nim</b></big></big></div>');
+ WorkTime:=SystemFileTimeToDateTime(UpTime);
+ AddContent(AResponse,'Up ' + TimeToString(WorkTime));
+ AddContent(AResponse,Format('ClockBuffer.WriteCounter %d',[ClockBuffer.WriteCounter]));
+ AddContent(AResponse,Format('LedBuffer.WriteCounter %d',[LedBuffer.WriteCounter]));
+ Result:=True;
+end;
 
 procedure RingBufferOfIntInit(var Buffer:TRingBufferOfInt);
 begin
@@ -50,12 +82,6 @@ begin
   end;
 end;
 
-var 
- ClockBuffer,LedBuffer:TRingBufferOfInt;
- BlinkLoopHandle:TThreadHandle = INVALID_HANDLE_VALUE;
- CurrentMilliseconds,PrevMilliseconds:Integer;
- LedRequest:Integer;
-
 procedure NimBlinkLoop(ClockBuffer,LedBuffer:PRingBufferOfInt); cdecl; external 'libultibonimlib' name 'nimBlinkLoop';
 function BlinkLoop(Parameter:Pointer):PtrInt;
 begin
@@ -79,6 +105,17 @@ begin
   CopyFile('default-config.txt','config.txt',False);
 
  StartLogging;
+
+ HTTPListener:=THTTPListener.Create;
+ HTTPListener.Active:=True;
+ WEBSTATUS_FONT_NAME:='Monospace';
+ WebStatusRegister(HTTPListener,'','',False);
+ UltiboNimWebStatus:=TUltiboNimWebStatus.Create('UltiboNim','/ultibonim',1);
+ HTTPListener.RegisterDocument('',UltiboNimWebStatus);
+ HTTPRedirect:=THTTPRedirect.Create;
+ HTTPRedirect.Name:='/';
+ HTTPRedirect.Location:='/status/ultibonim';
+ HTTPListener.RegisterDocument('',HTTPRedirect);
 
  RingBufferOfIntInit(ClockBuffer);
  RingBufferOfIntInit(LedBuffer);
