@@ -40,11 +40,12 @@ function TUltiboNimWebStatus.DoContent(AHost:THTTPHost;ARequest:THTTPServerReque
 var 
  WorkTime:TDateTime;
 begin
- AddContent(AResponse,'<div><big><big><b>Ultibo and Nim</b></big></big></div>');
+ AddContent(AResponse,'<div><big><big><b><div>Ultibo and Nim</div><div><a href=https://github.com/markprocess/ultibo-nim/blob/master/README.md>Source Repository</a></div></b>');
  WorkTime:=SystemFileTimeToDateTime(UpTime);
- AddContent(AResponse,'Up ' + TimeToString(WorkTime));
- AddContent(AResponse,Format('ClockBuffer.WriteCounter %d',[ClockBuffer.WriteCounter]));
- AddContent(AResponse,Format('LedBuffer.WriteCounter %d',[LedBuffer.WriteCounter]));
+ AddContent(AResponse,Format('<div>Up %s</div>',[TimeToString(WorkTime)]));
+ AddContent(AResponse,Format('<div>ClockBuffer.WriteCounter %d</div>',[ClockBuffer.WriteCounter]));
+ AddContent(AResponse,Format('<div>LedBuffer.WriteCounter %d</div>',[LedBuffer.WriteCounter]));
+ AddContent(AResponse,'</big></big></div>');
  Result:=True;
 end;
 
@@ -110,7 +111,7 @@ begin
  HTTPListener.Active:=True;
  WEBSTATUS_FONT_NAME:='Monospace';
  WebStatusRegister(HTTPListener,'','',False);
- UltiboNimWebStatus:=TUltiboNimWebStatus.Create('UltiboNim','/ultibonim',1);
+ UltiboNimWebStatus:=TUltiboNimWebStatus.Create('Ultibo and Nim','/ultibonim',1);
  HTTPListener.RegisterDocument('',UltiboNimWebStatus);
  HTTPRedirect:=THTTPRedirect.Create;
  HTTPRedirect.Name:='/';

@@ -2,8 +2,18 @@
 set -e
 
 REPO=ultibo-nim
-LPR=ultibonimprogram
-CONF=RPI3
+LPR=$1
+CONF=$2
+
+if [[ $LPR == "" ]]
+then
+    LPR=ultibonimprogram
+fi
+
+if [[ $CONF == "" ]]
+then
+    CONF=RPI3
+fi
 
 echo build.sh $LPR $CONF
 case $CONF in

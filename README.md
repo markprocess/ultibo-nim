@@ -1,11 +1,13 @@
 # ultibo-nim
-[Ultibo](https://ultibo.org) and [Nim](https://nim-lang.org)
+[Ultibo](https://ultibo.org) [Features](https://ultibo.org/wiki/Current_Status#Feature_support) and [Nim](https://nim-lang.org)
 
 Blinks the raspberry pi's activity led.
 
-There is a running device at [ultibo-nim.iot.ngrok.io](http://ultibo-nim.iot.ngrok.io)
+Try it on-line at [ultibo-nim.iot.ngrok.io](http://ultibo-nim.iot.ngrok.io)
 
-Requirements
+[Prepare an sd card for your own pi](https://github.com/markprocess/ultibo-nim/releases)
+
+## Raspbian Development Host Requirements
 
 * [debian stretch lite](https://www.raspberrypi.org/downloads/raspbian/) installed on a raspberry pi
 * [ultibo installed](https://ultibo.org/forum/viewtopic.php?f=4&t=887&p=5593&hilit=ultiboinstaller#p5593)
@@ -15,14 +17,14 @@ Requirements
 boot file and reboots to start the new kernel. The activity led should blink once per second. The new kernel
 will have restored raspbian's /boot/config.txt so that recycling power will reboot to raspbian.
 
-If the ultibo kernel does not work as expected,, insert the sd card in a computer
+If the ultibo kernel does not work as expected, insert the sd card in a computer
 and copy default-config.txt to config.txt to restore raspbian.
 
 Two ring buffers are used between the main thread and the nim thread. One provides a millisecond clock
 to the nim thread and one provides an led request to the main thread. The main thread supplies the clock
 and changes the led based on requests. The nim thread reads the clock and requests led changes based on the time.
 
-Discussion
+## Discussion
 
 * [issues](https://github.com/markprocess/ultibo-nim/issues)
 * [ultibo forum](https://ultibo.org/forum/search.php?keywords=ultibo-nim)
