@@ -9,5 +9,6 @@ unzip *.zip
 rm *.zip
 sudo cp ultibo-nim-ultibonimprogram-* config.txt /boot
 df /boot
+sync
 sleep 5
 sudo reboot

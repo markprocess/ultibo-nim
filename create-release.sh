@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e # exit script on any error
 
-VERSION=v$(date +%Y.%m.%d.%H%M)
+RELEASE_COUNTER=2
+VERSION=v$(date +%Y%m%d)-r$RELEASE_COUNTER
 PREFIX=ultibo-nim
 ZIPFILE=$PREFIX-$VERSION.zip
 PATH=$HOME/hub-linux-arm-2.3.0-pre10/bin:$PATH

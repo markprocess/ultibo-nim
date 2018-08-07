@@ -6,6 +6,7 @@ uses
 {$ifdef BUILD_RPI2} BCM2709,BCM2836, {$endif}
 {$ifdef BUILD_RPI3} BCM2710,BCM2837, {$endif}
 GlobalConfig,GlobalConst,GlobalTypes,Platform,Threads,SysUtils,Classes,Console,Logging,Ultibo,
+Services,
 FileSystem,MMC,FATFS,
 DWCOTG,WebStatus,SMSC95XX,LAN78XX,HTTP;
 
@@ -42,6 +43,11 @@ var
 begin
  AddContent(AResponse,'<div><big><big><b><div>Ultibo and Nim</div><div><a href=https://github.com/markprocess/ultibo-nim/blob/master/README.md>Source Repository</a></div></b>');
  WorkTime:=SystemFileTimeToDateTime(UpTime);
+ AddContent(AResponse,'<hr>');
+ AddContent(AResponse,Format('<div>%s %s</div>',[BoardTypeToString(BoardGetType),MachineTypeToString(MachineGetType)]));
+ AddContent(AResponse,Format('<div>%s %s %s</div>',[CPUArchToString(CPUGetArch),CPUTypeToString(CPUGetType),CPUModelToString(CPUGetModel)]));
+ AddContent(AResponse,Format('<div>%d cpus %d bytes ram</div>',[CPUGetCount,MemoryGetSize]));
+ AddContent(AResponse,'<hr>');
  AddContent(AResponse,Format('<div>Up %s</div>',[TimeToString(WorkTime)]));
  AddContent(AResponse,Format('<div>ClockBuffer.WriteCounter %d</div>',[ClockBuffer.WriteCounter]));
  AddContent(AResponse,Format('<div>LedBuffer.WriteCounter %d</div>',[LedBuffer.WriteCounter]));
