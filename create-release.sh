@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e # exit script on any error
 
-RELEASE_COUNTER=2
+RELEASE_COUNTER=3
 VERSION=v$(date +%Y%m%d)-r$RELEASE_COUNTER
 PREFIX=ultibo-nim
 ZIPFILE=$PREFIX-$VERSION.zip

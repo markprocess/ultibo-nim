@@ -2,16 +2,15 @@ program UltiboNimProgram;
 {$mode delphi}
 
 uses 
-{$ifdef BUILD_QEMUVPB} QEMUVersatilePB, {$endif}
-{$ifdef BUILD_RPI    } BCM2708,BCM2835, {$endif}
-{$ifdef BUILD_RPI2   } BCM2709,BCM2836, {$endif}
-{$ifdef BUILD_RPI3   } BCM2710,BCM2837, {$endif}
+{$ifdef BUILD_QEMUVPB} QEMUVersatilePB, VersatilePb, {$endif}
+{$ifdef BUILD_RPI    } BCM2708,BCM2835,              {$endif}
+{$ifdef BUILD_RPI2   } BCM2709,BCM2836,              {$endif}
+{$ifdef BUILD_RPI3   } BCM2710,BCM2837,              {$endif}
 GlobalConfig,GlobalConst,GlobalTypes,Platform,Threads,SysUtils,Classes,Console,Logging,Ultibo,Services,
 Mouse,
 FileSystem,MMC,FATFS,
 HTTP,WebStatus,
-DWCOTG,SMSC95XX,LAN78XX,
-VersatilePb;
+DWCOTG,SMSC95XX,LAN78XX;
 
 type 
  PRingBufferOfInt = ^TRingBufferOfInt;
@@ -43,7 +42,9 @@ var
  C:Char;
 procedure SerialByte(C:Char);
 begin
+{$ifdef BUILD_QEMUVPB}
  PLongWord(VERSATILEPB_UART0_REGS_BASE)^ := Ord(C);
+{$endif}
 end;
 begin
  for C in S do
